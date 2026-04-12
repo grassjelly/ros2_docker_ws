@@ -1,5 +1,5 @@
 repositories:
-  linorobot2:
+  my_repo:
     type: git
-    url: https://github.com/linorobot/linorobot2.git
-    version: jazzy
+    url: https://github.com/my_github/my_repo.git
+    version: branch_name
