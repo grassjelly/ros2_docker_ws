@@ -1,0 +1,47 @@
+services:
+  build:
+    image: ${PROJECT_NAME}:${BASE_IMAGE}
+    build:
+      context: ../
+      dockerfile: docker/Dockerfile
+      args:
+        - VIRTUALGL_VER=${VIRTUALGL_VER:-3.1}
+        - HOST_UID=${HOST_UID:-1000}
+        - HOST_GID=${HOST_GID:-1000}
+        - BASE_IMAGE=${BASE_IMAGE}
+        - DOCKER_ROS_DISTRO=${DOCKER_ROS_DISTRO:-jazzy}
+        - DOCKER_RMW_IMPLEMENTATION=${DOCKER_RMW_IMPLEMENTATION}
+        - WORKSPACE_NAME=${WORKSPACE_NAME:-ros2_ws}
+      target: final
+
+  base:
+    image: ${PROJECT_NAME}:${BASE_IMAGE}
+    stdin_open: true
+    tty: true
+    network_mode: host
+    ipc: host
+    privileged: true
+    environment:
+      - GPU_ID=${GPU_ID:-0}
+      - ROS_DOMAIN_ID=${DOCKER_ROS_DOMAIN_ID:-0}
+      - RMW_IMPLEMENTATION=${DOCKER_RMW_IMPLEMENTATION}
+      - DISPLAY=${DISPLAY}
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix:rw
+      - $HOME/.Xauthority:/home/ros/.Xauthority
+
+  dev:
+    container_name: dev
+    extends: base
+    command: sleep infinity
+    volumes:
+      - ../src:/home/ros/${WORKSPACE_NAME:-ros2_ws}/src/
+
+  kasmvnc:
+    container_name: kasmvnc
+    image: lsiobase/kasmvnc:alpine321
+    network_mode: host
+    environment:
+    - DISPLAY=:200
+    volumes:
+    - ./kasm-autostart:/defaults/autostart
