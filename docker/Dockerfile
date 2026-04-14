@@ -81,8 +81,7 @@ RUN sudo apt-get update && \
         --rosdistro=${DOCKER_ROS_DISTRO} \
         --from-paths src \
         -iry \
-        --os=ubuntu:$(lsb_release --codename | cut -f2) \
-        --skip-keys microxrcedds_agent && \
+        --os=ubuntu:$(lsb_release --codename | cut -f2) && \
     sudo rm -rf /var/lib/apt/lists/*
 
 # Build the workspace
