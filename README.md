@@ -1,4 +1,4 @@
-# ros2-docker-template
+# ros2_docker_ws
 
 A minimal template for containerizing ROS2 projects using [vcstool](https://github.com/dirk-thomas/vcstool).
 
@@ -78,3 +78,11 @@ cd docker
 - Edit `repos.yml` to add or change the repositories cloned into `src/` during the image build.
 - Edit `docker/docker-compose.yaml` to add services for your project.
 - Edit `docker/Dockerfile` to change the ROS2 distro or base image variant (`hardware`, `gazebo`, `gazebo-cuda`).
+- Set `DOCKER_DISPLAY` to override the display used inside the container. This is useful when using a web-based display (e.g. KasmVNC), where the display is served on a virtual display rather than the host's:
+
+  ```bash
+  export DOCKER_DISPLAY=:200
+  ./dev
+  ```
+
+  If `DOCKER_DISPLAY` is not set, the container falls back to the host's `$DISPLAY`.
