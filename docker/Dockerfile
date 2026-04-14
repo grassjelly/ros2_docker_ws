@@ -70,12 +70,23 @@ RUN if [ "$BASE_IMAGE" = 'gazebo-cuda' ]; then \
         echo 'done' >> ~/.bashrc ; \
     fi
 
-# Update rosdep and install dependencies
+# Install RMW implementation
 RUN sudo apt-get update && \
     if [ -n "${DOCKER_RMW_IMPLEMENTATION}" ]; then \
         sudo apt-get install -y --no-install-recommends \
             ros-${DOCKER_ROS_DISTRO}-$(echo ${DOCKER_RMW_IMPLEMENTATION} | tr '_' '-') ; \
     fi && \
+    sudo rm -rf /var/lib/apt/lists/*
+
+# [Optional] Install additional apt dependencies here before rosdep
+# RUN sudo apt-get update && \
+#     sudo apt-get install -y --no-install-recommends \
+#         <package-1> \
+#         <package-2> && \
+#     sudo rm -rf /var/lib/apt/lists/*
+
+# Update rosdep and install dependencies
+RUN sudo apt-get update && \
     rosdep update --rosdistro=${DOCKER_ROS_DISTRO} && \
     rosdep install \
         --rosdistro=${DOCKER_ROS_DISTRO} \
