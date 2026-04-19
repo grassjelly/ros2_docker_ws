@@ -56,11 +56,11 @@ RUN groupmod --gid ${HOST_GID} ${USERNAME} \
 
 # Switch to ros user for building and create the workspace
 USER ${USERNAME}
-RUN mkdir -p ${WORKSPACE}/src
+RUN mkdir -p ${WORKSPACE}
 WORKDIR ${WORKSPACE}
 
 # Copy source directory
-COPY --chown=${USERNAME}:${USERNAME} src/ ${WORKSPACE}/src/
+COPY --chown=${USERNAME}:${USERNAME} . ${WORKSPACE}/
 
 # Configure VGL wrapper functions in user's bashrc (gazebo-cuda only)
 RUN if [ "$BASE_IMAGE" = 'gazebo-cuda' ]; then \
@@ -90,7 +90,7 @@ RUN sudo apt-get update && \
     rosdep update --rosdistro=${DOCKER_ROS_DISTRO} && \
     rosdep install \
         --rosdistro=${DOCKER_ROS_DISTRO} \
-        --from-paths src \
+        --from-paths . \
         -iry \
         --os=ubuntu:$(lsb_release --codename | cut -f2) && \
     sudo rm -rf /var/lib/apt/lists/*

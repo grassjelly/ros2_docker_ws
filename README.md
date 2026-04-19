@@ -52,13 +52,13 @@ Reboot after driver installation before building the image.
 
 Choose one of the following approaches:
 
-- **Using vcstool (recommended):** Edit `repos.yml` to declare your repositories, then import them into `src/`:
+- **Using vcstool (recommended):** Edit `repos.yml` to declare your repositories, then import them into the workspace root:
 
   ```bash
-  vcs import src/ < repos.yml
+  vcs import . < repos.yml
   ```
 
-- **Manually:** Place your ROS 2 package directories directly inside `src/`. The Dockerfile clones from `repos.yml` at build time, so any packages you want baked into the image must be listed there. For local development without rebuilding the image, manually placed packages in `src/` are picked up via the volume mount in the `dev` container.
+- **Manually:** Place your ROS 2 package directories directly in the workspace root. The Dockerfile copies the workspace root at build time, so any packages you want baked into the image must be present there. For local development without rebuilding the image, packages in the workspace root are picked up via the volume mount in the `dev` container.
 
 **2. Build the Docker image**
 
@@ -75,7 +75,7 @@ cd docker
 
 ## Customization
 
-- Edit `repos.yml` to add or change the repositories cloned into `src/` during the image build.
+- Edit `repos.yml` to add or change the repositories imported into the workspace root during the image build.
 - Edit `docker/docker-compose.yaml` to add services for your project.
 - Edit `docker/Dockerfile` to change the ROS2 distro or base image variant (`hardware`, `gazebo`, `gazebo-cuda`).
 - Set `DOCKER_DISPLAY` to override the display used inside the container. This is useful when using a web-based display (e.g. KasmVNC), where the display is served on a virtual display rather than the host's:

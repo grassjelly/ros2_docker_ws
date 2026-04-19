@@ -35,7 +35,7 @@ services:
     extends: base
     command: sleep infinity
     volumes:
-      - ../src:/home/ros/${WORKSPACE_NAME:-ros2_ws}/src/
+      - ../:/home/ros/${WORKSPACE_NAME:-ros2_ws}/
 
   kasmvnc:
     container_name: kasmvnc
